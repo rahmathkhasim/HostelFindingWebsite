@@ -7,7 +7,6 @@ const bcrypt = require('bcryptjs');  // For password encryption
 
 // Initialize the Express app
 const app = express();
-const PORT = 3000;
 
 // Middleware
 app.use(express.static('public'));
@@ -96,6 +95,7 @@ app.get('/explore', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'dashboard.html'));
 });
 // Start the server
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
