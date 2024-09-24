@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            color: black;
+            padding-top: 20px;
+            overflow-x: hidden;
+        }
+        .navbar {
+            width: 100%;
+            background-color: #3498db;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 40px;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        .hostel-details {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 20px; /* Added padding-top to make space for the fixed navbar */
+        }
+        .hostel-info {
+            text-align: center;
+            width: 100%;
+        }
+        .hostel-name {
+            display: none; /* Hide the name from the original position */
+        }
+        .hostel-description {
+            font-size: 18px;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease 0.2s;
+        }
+        .hostel-owner {
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease 0.6s;
+        }
+        .hostel-owner img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+        .hostel-owner p {
+            font-style: italic;
+        }
+        .contact-owner {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease 0.8s;
+        }
+        .contact-owner p {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .contact-owner button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            position: relative;
+        }
+        .contact-owner button:hover {
+            background-color: #2980b9;
+        }
+        .contact-owner button::before {
+            content: '📞';
+            display: inline-block;
+            margin-right: 5px;
+            animation: ring 1.5s infinite;
+        }
+        @keyframes ring {
+            0%, 100% { transform: rotate(0); }
+            10% { transform: rotate(15deg); }
+            20% { transform: rotate(-10deg); }
+            30% { transform: rotate(10deg); }
+            40% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+            60% { transform: rotate(-5deg); }
+            70% { transform: rotate(5deg); }
+            80% { transform: rotate(-5deg); }
+            90% { transform: rotate(5deg); }
+        }
+        .hostel-reviews {
+            display: flex;
+            justify-content: center;
+            flex-direction: row;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            transition: all 0.6s ease 0.6s;
+        }
+        .review-container {
+            flex: 1;
+            padding: 10px;
+            max-width: 33%;
+            box-sizing: border-box;
+            margin: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f9f9f9;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+        .review-container p {
+            margin: 0;
+        }
+        .star-rating {
+            color: #f39c12;
+            margin-bottom: 5px;
+        }
+        .timings-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .timings-table th, .timings-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        .timings-table th {
+            background-color: #f2f2f2;
+        }
+        .timings-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        .student-info-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease 0.6s;
+        }
+        .student-info {
+            margin: 10px;
+            display: block;
+            justify-content: center;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            transition: transform 0.3s ease;
+            text-align: center;
+            flex: 1 0 calc(25% - 40px);
+            box-sizing: border-box;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .student-info:nth-child(4n+1) {
+            transition-delay: 1.6s;
+        }
+        .student-info:nth-child(4n+2) {
+            transition-delay: 1.7s;
+        }
+        .student-info:nth-child(4n+3) {
+            transition-delay: 1.8s;
+        }
+        .student-info:nth-child(4n+4) {
+            transition-delay: 1.9s;
+        }
+        .student-info:hover {
+            transform: scale(1.05);
+        }
+        .visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .contact-form {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .contact-form h2 {
+            margin-top: 0;
+        }
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .contact-form button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            position: relative;
+        }
+        .contact-form button:hover {
+            background-color: #2980b9;
+        }
+        .contact-form button i {
+            margin-right: 5px;
+        }
+        .submission-message {
+            display: none;
+            margin-top: 20px;
+            color: #27ae60;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">Adithya Hostel</div>
+    <div class="hostel-details">
+        <div class="hostel-info">
+            <!-- The hostel name is now in the navbar and hidden from this section -->
+            <div class="hostel-owner">
+                <div class="food-info-container">
+                    <p>"Welcome to Adithya Hostel."<br> We strive to provide the best accommodation experience for our guests, where comfort meets convenience. Our hostel offers modern amenities, friendly staff, and a variety of meal options to ensure you have a pleasant stay. Located in a serene environment, our hostel is designed to provide a peaceful retreat after a busy day. Enjoy our spacious rooms, high-speed internet, and a vibrant community that makes you feel at home."</p>
+                </div>
+            </div>
+            <div class="mess-timings">
+                <h2>Mess Timings</h2>
+                <table class="timings-table">
+                    <tr>
+                        <th>Day</th>
+                        <th>Breakfast</th>
+                        <th>Lunch</th>
+                        <th>Dinner</th>
+                    </tr>
+                    <tr>
+                        <td>Monday to Friday</td>
+                        <td>7:00 AM - 9:00 AM</td>
+                        <td>12:00 PM - 2:00 PM</td>
+                        <td>7:00 PM - 9:00 PM</td>
+                    </tr>
+                    <tr>
+                        <td>Saturday</td>
+                        <td>8:00 AM - 10:00 AM</td>
+                        <td>12:30 PM - 2:30 PM</td>
+                        <td>6:30 PM - 8:30 PM</td>
+                    </tr>
+                    <tr>
+                        <td>Sunday</td>
+                        <td>8:30 AM - 10:30 AM</td>
+                        <td>1:00 PM - 3:00 PM</td>
+                        <td>6:00 PM - 8:00 PM</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="food-info-container">
+                <h2>Food Information</h2>
+                <p>Monday: South Indian Breakfast, North Indian Lunch, Chinese Dinner</p>
+                <p>Tuesday: Continental Breakfast, South Indian Lunch, Italian Dinner</p>
+                <p>Wednesday: North Indian Breakfast, Chinese Lunch, Continental Dinner</p>
+                <p>Thursday: Italian Breakfast, North Indian Lunch, South Indian Dinner</p>
+                <p>Friday: Chinese Breakfast, Italian Lunch, North Indian Dinner</p>
+                <p>Saturday: Continental Breakfast, South Indian Lunch, Chinese Dinner</p>
+                <p>Sunday: Special Breakfast, Special Lunch, Special Dinner</p>
+            </div>
+            <h2>Reviews</h2>
+            <div class="hostel-reviews">
+                <div class="review-container">
+                    <div class="star-rating">⭐⭐⭐⭐⭐</div>
+                    <p>"The hostel is clean and well-maintained. I had a comfortable stay and the staff was very friendly." - Kamal</p>
+                </div>
+                <div class="review-container">
+                    <div class="star-rating">⭐⭐⭐⭐⭐</div>
+                    <p>"Great location and excellent facilities. The food was delicious and the rooms were spacious." - shashank</p>
+                </div>
+                <div class="review-container">
+                    <div class="star-rating">⭐⭐⭐⭐</div>
+                    <p>"I had a wonderful experience staying at this hostel. Highly recommended!" - uday</p>
+                </div>
+                <div class="review-container">
+                    <div class="star-rating">⭐⭐⭐⭐</div>
+                    <p>"Affordable and comfortable. The best hostel experience I've had." - chanikya</p>
+                </div>
+                <!-- Add more reviews as needed -->
+            </div>
+        </div>
+        <div>
+            <div class="contact-owner">
+                <p>Contact Owner</p>
+                <button onclick="window.location.href='tel:+911234567890'">Call Now</button>
+            </div>
+            <div class="student-info-container">
+                <div class="student-info">"The hostel is clean and well-maintained. I had a comfortable stay and the staff was very friendly." - John Doe</div>
+                <div class="student-info">"Great location and excellent facilities. The food was delicious and the rooms were spacious." - Jane Smith</div>
+                <div class="student-info">"I had a wonderful experience staying at this hostel. Highly recommended!" - Michael Johnson</div>
+                <div class="student-info">"Affordable and comfortable. The best hostel experience I've had." - Emily Davis</div>
+                <div class="student-info">"The hostel is clean and well-maintained. I had a comfortable stay and the staff was very friendly." - John Doe</div>
+                <div class="student-info">"Great location and excellent facilities. The food was delicious and the rooms were spacious." - Jane Smith</div>
+                <div class="student-info">"I had a wonderful experience staying at this hostel. Highly recommended!" - Michael Johnson</div>
+                <div class="student-info">"Affordable and comfortable. The best hostel experience I've had." - Emily Davis</div>
+            </div>
+        </div>
+        <!-- Contact Form -->
+        <div class="contact-form">
+            <h2>Contact Us</h2>
+            <form id="contactForm">
+                <input type="text" id="name" name="name" placeholder="Your Name" required>
+                <input type="email" id="email" name="email" placeholder="Your Email" required>
+                <textarea id="message" name="message" placeholder="Your Message" rows="4" required></textarea>
+                <button type="submit"><i class="fas fa-paper-plane"></i> Send</button>
+            </form>
+            <div id="submissionMessage" class="submission-message">Submitted</div>
+        </div>
+    </div>
+
+    <audio id="submissionSound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const elements = document.querySelectorAll('.hostel-name, .hostel-description, .hostel-rating, .hostel-owner, .contact-owner, .mess-timings, .food-info-container, .student-info, .review-container');
+            elements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.classList.add('visible');
+                }, index * 100);
+            });
+
+            const form = document.getElementById('contactForm');
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                // Play the sound
+                const sound = document.getElementById('submissionSound');
+                sound.play();
+
+                // Show the submitted message
+                const message = document.getElementById('submissionMessage');
+                message.style.display = 'block';
+
+                // Clear the form
+                form.reset();
+            });
+        });
+    </script>
+</body>
+</html>
