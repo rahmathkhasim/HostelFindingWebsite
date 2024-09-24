@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hostel Finder Home</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@100;400;900&display=swap" rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/npm/kute.js@2.1.2/dist/kute.min.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Prompt', sans-serif;
+        color: white;
+        background: #ff0066; /* Set background color to pink */
+        overflow-x: hidden;
+      }
+      section {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Center content vertically */
+        align-items: center;    /* Center content horizontally */
+        min-height: 100vh;
+        background: #ff0066; /* Set background color to pink */
+        overflow: hidden;
+        text-align: center; /* Center align text */
+        padding: 0 20px; /* Add padding to prevent text from touching the edges */
+        z-index: 1; /* Ensure content is on top */
+      }
+      h1 {
+        font-size: 4rem;
+        margin-bottom: 20px;
+      }
+      p {
+        font-size: 1.5rem;
+        margin-bottom: 40px;
+      }
+      .blob-motion {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw; /* Full viewport width */
+        height: 100vh; /* Full viewport height */
+        z-index: 0; /* Ensure it is behind the content */
+        transform: translateY(3px); /* Move the blob down by 3px */
+      }
+      .blob-content {
+        z-index: 1; /* Ensure content is on top of the SVG */
+      }
+      .btn {
+        background-color:#ff0044; /* Light pink */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+      }
+      .btn:hover {
+        background-color: #f8678e; /* Dark pink */
+      }
+    </style>
+  </head>
+  <body>
+
+    <section>
+      <div class="blob-content">
+        <h1>Welcome to Our Hostel Finder</h1>
+        <p>Find the perfect place to stay.</p>
+        <button class="btn" onclick="window.location.href='/login'">Explore Hostels</button>
+      </div>
+      <svg
+        class="blob-motion"
+        id="visual"
+        viewBox="0 0 960 540"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        version="1.1"
+      >
+        <g transform="translate(450.7256843113689 283.4942824330989)">
+          <path
+            id="blob1"
+            d="M148.7 -134.9C193.7 -103.7 231.9 -51.9 232.4 0.6C233 53 196.1 106.1 151.1 128.6C106.1 151.1 53 143 -4.4 147.4C-61.8 151.8 -123.5 168.5 -151.2 146C-178.8 123.5 -172.4 61.8 -172.8 -0.4C-173.1 -62.5 -180.3 -124.9 -152.6 -156.1C-124.9 -187.3 -62.5 -187.1 -5.3 -181.8C51.9 -176.5 103.7 -166 148.7 -134.9"
+            fill="#BB004B"
+          ></path>
+        </g>
+        <g transform="translate(509.54377535978017 281.49390864595887)" style="visibility: hidden">
+          <path
+            id="blob2"
+            d="M115.4 -137.9C137.9 -92.9 136.4 -46.4 133.6 -2.8C130.8 40.8 126.6 81.6 104.1 118.4C81.6 155.2 40.8 188.1 -8.4 196.5C-57.5 204.8 -115 188.7 -151 151.9C-187 115 -201.5 57.5 -190.8 10.7C-180.1 -36.1 -144.1 -72.1 -108.1 -117.1C-72.1 -162.1 -36.1 -216.1 5.2 -221.2C46.4 -226.4 92.9 -182.9 115.4 -137.9"
+            fill="#BB004B"
+          ></path>
+        </g>
+      </svg>
+
+      <script>
+        const tween = KUTE.fromTo(
+          '#blob1',
+          { path: '#blob1' },
+          { path: '#blob2' },
+          { repeat: 999, duration: 3000, yoyo: true }
+        ).start();
+      </script>
+    </section>
+    
+  </body>
+</html>

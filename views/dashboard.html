@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrollable Website with Authentication</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0d1321;
+            overflow-x: hidden;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #243252;
+            padding: 10px;
+            color: white;
+            font-weight: bold;
+        }
+        .navbar .logo {
+            font-size: 1.5em;
+            margin-left: 11%;
+        }
+        .navbar input[type="text"] {
+            width: 390px;
+            padding: 5px;
+        }
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            margin-right: 8%;
+            padding: 0;
+        }
+        .navbar ul li {
+            margin: 0 10px;
+        }
+        .navbar ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        .navbar .profile-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .profile-dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #243252;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+        .profile-dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .profile-dropdown-content a:hover {
+            background-color: #0d1321;
+        }
+        .profile-dropdown:hover .profile-dropdown-content {
+            display: block;
+        }
+        .search-container {
+            display: flex;
+            justify-content: center;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 400px;
+        }
+        .search-input {
+            padding: 5px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            outline: none;
+            width: 100%;
+            box-shadow: 0 0 5px rgba(251, 251, 251, 0.1);
+        }
+        .search-input:focus {
+            box-shadow: 0 0 10px rgba(254, 254, 255, 0.1);
+        }
+        section {
+            padding: 100px 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+        }
+        .filters {
+            margin-top: 1.5%;
+            margin-right: 3%;
+            width: 35%;
+            height: 50%;
+            padding: 20px;
+            color: white;
+            background-color: #243252;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        .filters h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .filters label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .filters input[type="radio"] {
+            margin-right: 2px;
+        }
+        .filters input[type="range"] {
+            width: 100%;
+        }
+        .dashboard {
+            width: 100%;
+        }
+        .hostel-details {
+            display: flex;
+            align-items: flex-start;
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            position: relative;
+            overflow: hidden;
+            width: 90%;
+            margin: 20px auto;
+            background-color: #243252;
+            color: rgb(252, 252, 252);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hostel-details:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .hostel-image-slider {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            overflow: hidden;
+        }
+        .hostel-image {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .hostel-image.active {
+            opacity: 1;
+        }
+        .hostel-info {
+            flex: 1;
+            padding-left: 20px;
+            font-size: 16px;
+            text-align: center;
+        }
+        .hostel-name {
+            font-weight: bold;
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-decoration: none;
+        }
+        .hostel-rating {
+            color: #ffffff;
+            margin-top: 10px;
+            text-decoration: none;
+        }
+        .view-details {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .view-button {
+            background-color: #0d1321; 
+            color: #ffffff;
+            border: 2px thin white;
+            padding: 5px 10px;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+        .view-button:hover {
+            background-color: #243252;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">HostelFinder</div>
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search hostels..." oninput="filterHostels()">
+        </div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li class="profile-dropdown">
+                <a href="#" id="profile-link">Username</a>
+                <div class="profile-dropdown-content">
+                    <a href="#">Profile</a>
+                    <a href="login.php">Logout</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+    <section id="dashboard" class="container">
+        <div class="filters">
+            <h2>Filters</h2>
+            <label><input type="radio" name="filter" value="priceLow"> Price: Low to High</label>
+            <label><input type="radio" name="filter" value="priceHigh"> Price: High to Low</label>
+            <label><input type="radio" name="filter" value="ratingLow"> Rating: Low to High</label>
+            <label><input type="radio" name="filter" value="ratingHigh"> Rating: High to Low</label>
+        </div>
+        <div class="dashboard">
+            <a href="/hostels/Manasa.html" style="text-decoration: none;">
+                <div class="hostel-details" id="manasa" data-price="7000" data-rating="4" data-reviews="50" data-distance="20">
+                    <div class="hostel-image-slider" onmouseenter="startSlide('manasa')" onmouseleave="stopSlide('manasa')">
+                        <div class="hostel-image active">
+                            <img src="images/manasa.jpg" alt="Manasa Hostel Image" style="width: 100%; height: 100%; border-radius: 20px;">
+                        </div>
+                        <div class="hostel-image">
+                            <img src="images/manasa2.jpg" alt="Manasa Hostel Image" style="width: 100%; height: 100%; border-radius: 20px;">
+                        </div>
+                    </div>
+                    <div class="hostel-info">
+                        <div class="hostel-name">Manasa Hostel</div>
+                        <div>Owner: Rambabu</div>
+                        <div class="hostel-rating">Rating: 4 out of 5</div>
+                        <div>Monthly Fee: 7000</div>
+                        <div class="view-details">
+                            <button class="view-button" onclick="window.location.href = '/hostels/Manasa.html'">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </a>            
+            <a href="/hostels/Dhruv.html" style="text-decoration: none;">
+                <div class="hostel-details" id="dhruv" data-price="7500" data-rating="5" data-reviews="70" data-distance="30">
+                    <div class="hostel-image-slider" onmouseenter="startSlide('dhruv')" onmouseleave="stopSlide('dhruv')">
+                        <div class="hostel-image active">
+                            <img src="images/dhruv1.jpg" alt="Dhruv Hostel Image" style="width: 100%; height: 100%; border-radius: 20px;">
+                        </div>
+                        <div class="hostel-image">
+                            <img src="images/dhurv2.jpg" alt="Dhruv Hostel Image" style="width: 100%; height: 100%; border-radius: 20px;">
+                        </div>
+                    </div>
+                    <div class="hostel-info">
+                        <div class="hostel-name">Dhruv Hostel</div>
+                        <div>Owner: Somesh</div>
+                        <div class="hostel-rating">Rating: 5 out of 5</div>
+                        <div>Monthly Fee: 7500</div>
+                        <div class="view-details">
+                            <button class="view-button" onclick="window.location.href = '/hostels/Dhruv.html'">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <a href="/hostels/aditya.html" style="text-decoration: none;">
+                <div class="hostel-details" id="adithya" data-price="7000" data-rating="4" data-reviews="40" data-distance="25">
+                    <div class="hostel-image-slider" onmouseenter="startSlide('adithya')" onmouseleave="stopSlide('adithya')">
+                        <div class="hostel-image active">
+                            <img src="images/aditya1.jpg" alt="Adithya Hostel Image" style="width: 100%; height: 100%; border-radius: 20px;">
+                        </div>
+                        <div class="hostel-image">
+                            <img src="images/aditya2.jpg" alt="Adithya Hostel Image" style="width: 100%; height: 100%; border-radius: 20px;">
+                        </div>
+                    </div>
+                    <div class="hostel-info">
+                        <div class="hostel-name">Adithya Hostel</div>
+                        <div>Owner: Ravi</div>
+                        <div class="hostel-rating">Rating: 4 out of 5</div>
+                        <div>Monthly Fee: 7000</div>
+                        <div class="view-details">
+                            <button class="view-button" onclick="window.location.href = '/hostels/aditya.html'">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <a href="/hostels/ajayreddy.html" style="text-decoration: none;">
+                <div class="hostel-details" id="ajayreddy" data-price="6800" data-rating="3" data-reviews="30" data-distance="40">
+                    <div class="hostel-image-slider" onmouseenter="startSlide('ajayreddy')" onmouseleave="stopSlide('ajayreddy')">
+                        <div class="hostel-image active">
+                            <img src="images/ajayreddy1.jpg" alt="Ajay-Reddy Hostel Image" style="width: 100%; height: 100%; border-radius: 20px;">
+                        </div>
+                        <div class="hostel-image">
+                            <img src="images/ajayreddy2.jpg" alt="Ajay-Reddy Hostel Image" style="width: 100%; height: 100%; border-radius: 20px;">
+                        </div>
+                    </div>
+                    <div class="hostel-info">
+                        <div class="hostel-name">Ajay-Reddy Hostel</div>
+                        <div>Owner: Mohan</div>
+                        <div class="hostel-rating">Rating: 3 out of 5</div>
+                        <div>Monthly Fee: 6800</div>
+                        <div class="view-details">
+                            <button class="view-button" onclick="window.location.href = '/hostels/ajayreddy.html'">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <script>
+        let intervalId;
+
+        function startSlide(hostelId) {
+            const images = document.querySelectorAll(`#${hostelId} .hostel-image`);
+            let currentSlide = 0;
+            images[currentSlide].classList.add('active');
+
+            intervalId = setInterval(() => {
+                images[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % images.length;
+                images[currentSlide].classList.add('active');
+            }, 2000);
+        }
+
+        function stopSlide() {
+            clearInterval(intervalId);
+        }
+
+        function filterHostels() {
+            const input = document.querySelector('.search-input').value.toLowerCase();
+            const hostels = Array.from(document.querySelectorAll('.hostel-details'));
+            const selectedFilter = document.querySelector('.filters input[name="filter"]:checked')?.value;
+
+            let filteredHostels = hostels.filter(hostel => {
+                const name = hostel.querySelector('.hostel-name').textContent.toLowerCase();
+                return name.includes(input);
+            });
+
+            if (selectedFilter) {
+                if (selectedFilter.startsWith('price')) {
+                    filteredHostels.sort((a, b) => {
+                        const priceA = parseInt(a.getAttribute('data-price'));
+                        const priceB = parseInt(b.getAttribute('data-price'));
+                        return selectedFilter === 'priceLow' ? priceA - priceB : priceB - priceA;
+                    });
+                } else if (selectedFilter.startsWith('rating')) {
+                    filteredHostels.sort((a, b) => {
+                        const ratingA = parseInt(a.getAttribute('data-rating'));
+                        const ratingB = parseInt(b.getAttribute('data-rating'));
+                        return selectedFilter === 'ratingLow' ? ratingA - ratingB : ratingB - ratingA;
+                    });
+                }
+            }
+
+            hostels.forEach(hostel => hostel.style.display = 'none');
+            filteredHostels.forEach(hostel => hostel.style.display = '');
+        }
+
+        document.querySelectorAll('.filters input[type="radio"]').forEach((radio) => {
+            radio.addEventListener('change', filterHostels);
+        });
+
+        document.querySelector('.search-input').addEventListener('input', filterHostels);
+    </script>
+</body>
+</html>

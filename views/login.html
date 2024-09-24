@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@100;400;900&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            font-family: ui-sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ff0066; /* Light teal background */
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Center the items vertically */
+            height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 400px; /* Reduce width for a more compact design */
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px; /* More padding for a spacious look */
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Enhanced shadow for depth */
+            animation: fadeIn 0.5s; /* Fade in effect for the container */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-form {
+            margin-bottom: 20px; /* Space below the form */
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 500;
+            margin-bottom: 5px; /* Space between label and input */
+            display: block;
+            text-align: left;
+        }
+
+        input[type="email"], input[type="password"] {
+            padding: 12px;
+            margin: 10px 0;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #b2dfdb; /* Lighter border color */
+            border-radius: 8px; /* Slightly more rounded corners */
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="email"]:focus, input[type="password"]:focus {
+            border-color: #4ECDC4; /* Highlight border color on focus */
+            outline: none; /* Remove default outline */
+        }
+
+        button {
+            background-color: #4ECDC4;
+            color: #fff;
+            border: none;
+            padding: 12px 30px; /* Increased padding for larger button */
+            font-size: 18px; /* Larger font size */
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            font-weight: bold;
+            margin-top: 10px; /* Space above button */
+        }
+
+        button:hover {
+            background-color: #3dbb9f;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        h3 {
+            margin-top: 20px; /* Space between the login form and the message */
+            font-weight: 400;
+            color: #555; /* Softer color for the message */
+        }
+
+        .btn {
+            background-color: #ff8a65; /* Color for the signup button */
+            border-radius: 8px;
+            color: white;
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #ff7043;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="font-weight: 700;">Login</h1>
+        <form action="/login" method="POST" class="login-form">
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" required>
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required>
+            <button type="submit">Login</button>
+        </form>
+        <h3>Don't have an account? Register below</h3>
+        <button class="btn" onclick="window.location.href='register.html'">Signup</button>
+    </div>
+</body>
+<script>
+    window.onload = function() {
+        // Show the login form with animation
+        setTimeout(function() {
+            document.querySelector('.login-form').classList.add('visible');
+        }, 100); // Slight delay to ensure the page has fully loaded
+    };
+</script>
+</html>
