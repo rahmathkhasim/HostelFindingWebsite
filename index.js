@@ -1,7 +1,8 @@
 // Import required modules
+require('dotenv').config(); // Load environment variables from .env file
 const express = require('express');
 const mongoose = require('mongoose');
-const User = require('./models/User');  // Import the User model
+const User = require('../models/User');  // Import the User model
 const path = require('path');
 const bcrypt = require('bcryptjs');  // For password encryption
 
@@ -18,11 +19,10 @@ app.use(express.urlencoded({ extended: true }));  // Parse form data
 app.use(express.static(path.join(__dirname, 'views')));  // Serve static HTML files
 
 // MongoDB connection
-// MongoDB connection
-mongoose.connect('mongodb+srv://Rahmath_khasim:Rahamth%401654@cluster0.qxtax.mongodb.net/HostelFinding?retryWrites=true&w=majority')
-.then(() => console.log('Connected to MongoDB Atlas'))
-.catch((err) => console.error('MongoDB connection error:', err));
-
+const mongoURI = process.env.MONGODB_URI; // Get MongoDB URI from environment variable
+mongoose.connect(mongoURI)
+    .then(() => console.log('Connected to MongoDB Atlas'))
+    .catch((err) => console.error('MongoDB connection error:', err));
 
 // Routes
 
@@ -94,8 +94,9 @@ app.post('/register', async (req, res) => {
 app.get('/explore', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'dashboard.html'));
 });
+
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
